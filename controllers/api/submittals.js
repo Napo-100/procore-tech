@@ -8,21 +8,30 @@ const body = {
   client_secret: process.env.CLIENT_SECRET,
 };
 
-router.get("/", async (req, res) => {
-  try {
-    await fetch("https://sandbox.procore.com/oauth/token", {
-      method: "post",
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((token) => {
-        console.log(token);
-        res.json(token);
+router.post("/auth", (req, res) => {
+  // try {
+  fetch("https://sandbox.procore.com/oauth/token", {
+    method: "post",
+    body: JSON.stringify(body),
+    headers: { "Content-Type": "application/json" },
+  })
+    .then((res) => res.json())
+    .then((tokenData) => {
+      console.log(tokenData);
+      // res.json(tokenData);
+      return fetch("https://sandbox.procore.com//rest/v1.0/companies", {
+        headers: {
+          Authorization: tokenData.token_type + " " + tokenData.access_token,
+          "Content-Type": "application/json",
+        },
       });
-  } catch (err) {
-    res.status(500).send(err);
-  }
+    })
+    .then((res) => res.json())
+    .then((companyData) => {
+      console.log("company", companyData);
+      res.json(companyData);
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;
