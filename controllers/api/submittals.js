@@ -2,11 +2,15 @@ const router = require("express").Router();
 const fetch = require("node-fetch");
 require("dotenv").config();
 
-const projectId = "3fd8e539-0be9-4706-a8a2-6b057fbea2dd";
+const projectId = "37400";
 
-const submittalsPath = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
-const companyPath = "https://sandbox.procore.com/rest/v1.0/companies"
-const projectsPath = "https://sandbox.procore.com/rest/v1.0/projects?company_id=27788"
+const submittalsPath = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals?number=1`;
+const submittalsLog = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittal_logs/`;
+const companyPath = "https://sandbox.procore.com/rest/v1.0/companies";
+const projectsPath =
+  "https://sandbox.procore.com/rest/v1.0/projects?company_id=27788";
+const projectPathSingle =
+  `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/?company_id=27788`;
 const body = {
   grant_type: "client_credentials",
   client_id: process.env.CLIENT_ID,
@@ -23,7 +27,10 @@ router.post("/", (req, res) => {
     .then((tokenData) => {
       console.log(tokenData);
       return fetch(
-        projectsPath,
+        // projectsPath,
+        // submittalsPath,
+        // submittalsLog,
+        projectPathSingle,
         {
           headers: {
             Authorization: tokenData.token_type + " " + tokenData.access_token,
