@@ -1,0 +1,23 @@
+{
+  "name": "procore-tech",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Napo-100/procore-tech.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Napo-100/procore-tech/issues"
+  },
+  "homepage": "https://github.com/Napo-100/procore-tech#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
