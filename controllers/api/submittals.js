@@ -6,13 +6,16 @@ const projectId = "37400";
 const companyId = "27788";
 const officeId = "28780";
 
-const submittalsPackages = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittal_packages/`;
+const createProject = `https://sandbox.procore.com/rest/v1.0/projects?company_id=27788`;
 
-const submittalsLog = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
+const submittalsPackages = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittal_packages`;
 
-const showSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals/1`;
+const listSubmittals = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
+
+const showSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals/10`;
 
 const submittalStatus = `https://sandbox.procore.com/rest/v1.0/companies/${companyId}/submittal_statuses`;
+const submittalPackagesComp = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/?company_id=${companyId}/submittals/1`;
 
 const submittalAttachments = `https://sandbox.procore.com/rest/v1.0/submittal_associated_attachments/?project_id=${projectId}`;
 
@@ -22,7 +25,7 @@ const companyPath = "https://sandbox.procore.com/rest/v1.0/companies";
 
 const listProjects =
   "https://sandbox.procore.com/rest/v1.0/projects?company_id=27788";
-  
+
 const showProject = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/?company_id=${companyId}`;
 
 const body = {
@@ -31,7 +34,9 @@ const body = {
   client_secret: process.env.CLIENT_SECRET,
 };
 
-
+const submittal = {
+  number: 1,
+};
 
 router.post("/", (req, res) => {
   fetch("https://sandbox.procore.com/oauth/token", {
@@ -43,16 +48,20 @@ router.post("/", (req, res) => {
     .then((tokenData) => {
       console.log(tokenData);
       return fetch(
+        // companyPath,
         // listProjects,
-        showProject,
+        // showProject,
         // submittalStatus,
         // submittalAttachments,
         // showSubmittal,
-        // submittalsLog,
+        // listSubmittals,
         // submittalsPackages,
-        // createSubmittal,
+        // submittalPackagesComp,
+        createSubmittal,
         // deletedSubmittals,
         {
+          method: "post",
+          body: JSON.stringify(submittal),
           headers: {
             Authorization: tokenData.token_type + " " + tokenData.access_token,
             "Content-Type": "application/json",
@@ -60,6 +69,7 @@ router.post("/", (req, res) => {
         }
       );
     })
+
     .then((res) => res.json())
     .then((data) => {
       console.log("data", data);
