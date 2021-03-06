@@ -5,6 +5,7 @@ require("dotenv").config();
 const projectId = "37400";
 const companyId = "27788";
 const officeId = "28780";
+const subId = "19721"
 
 const createProject = `https://sandbox.procore.com/rest/v1.0/projects?company_id=27788`;
 
@@ -12,7 +13,7 @@ const submittalsPackages = `https://sandbox.procore.com/rest/v1.0/projects/${pro
 
 const listSubmittals = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
 
-const showSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals/10`;
+const showSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals/${subId}`;
 
 const submittalStatus = `https://sandbox.procore.com/rest/v1.0/companies/${companyId}/submittal_statuses`;
 const submittalPackagesComp = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/?company_id=${companyId}/submittals/1`;
@@ -34,11 +35,14 @@ const body = {
   client_secret: process.env.CLIENT_SECRET,
 };
 
-const submittal = {
-  number: 1,
+const submittalTwo = {
+  number: 2,
 };
 
 router.post("/", (req, res) => {
+  const submittalOne = {
+    number: 15,
+  };
   fetch("https://sandbox.procore.com/oauth/token", {
     method: "post",
     body: JSON.stringify(body),
@@ -61,7 +65,7 @@ router.post("/", (req, res) => {
         // deletedSubmittals,
         {
           method: "post",
-          body: JSON.stringify(submittal),
+          body: JSON.stringify(submittalOne),
           headers: {
             Authorization: tokenData.token_type + " " + tokenData.access_token,
             "Content-Type": "application/json",
