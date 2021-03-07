@@ -5,9 +5,7 @@ require("dotenv").config();
 const projectId = "37400";
 const companyId = "27788";
 const officeId = "28780";
-const subId = "19721"
-
-const createProject = `https://sandbox.procore.com/rest/v1.0/projects?company_id=27788`;
+const subId = "19721";
 
 const submittalsPackages = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittal_packages`;
 
@@ -16,16 +14,8 @@ const listSubmittals = `https://sandbox.procore.com/rest/v1.0/projects/${project
 const showSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals/${subId}`;
 
 const submittalStatus = `https://sandbox.procore.com/rest/v1.0/companies/${companyId}/submittal_statuses`;
-const submittalPackagesComp = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/?company_id=${companyId}/submittals/1`;
-
-const submittalAttachments = `https://sandbox.procore.com/rest/v1.0/submittal_associated_attachments/?project_id=${projectId}`;
 
 const createSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
-
-const companyPath = "https://sandbox.procore.com/rest/v1.0/companies";
-
-const listProjects =
-  "https://sandbox.procore.com/rest/v1.0/projects?company_id=27788";
 
 const showProject = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/?company_id=${companyId}`;
 
@@ -35,14 +25,26 @@ const body = {
   client_secret: process.env.CLIENT_SECRET,
 };
 
-const submittalTwo = {
-  number: 2,
-};
-
 router.post("/", (req, res) => {
-  const submittalOne = {
-    number: 15,
+  if (!req) {
+    return "you must provide submittal data";
+  }
+  if(!req.body.number){
+    return "you MUST provide a number"
+  }
+  const submittalData = {
+    submittal_package_id: req.body.submittalPackageId,
+    title: req.body.name,
+    description: req.body.description,
+    number: req.body.number,
+    revision: req.body.revisionNumber,
+    current_revision: req.body.isMostRecentRevision,
+    type: req.body.trade,
+    status_id: req.body.status,
+    
+   
   };
+  console.log(req.body);
   fetch("https://sandbox.procore.com/oauth/token", {
     method: "post",
     body: JSON.stringify(body),
@@ -65,7 +67,7 @@ router.post("/", (req, res) => {
         // deletedSubmittals,
         {
           method: "post",
-          body: JSON.stringify(submittalOne),
+          body: JSON.stringify(submittalData),
           headers: {
             Authorization: tokenData.token_type + " " + tokenData.access_token,
             "Content-Type": "application/json",
