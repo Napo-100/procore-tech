@@ -2,22 +2,22 @@ const router = require("express").Router();
 const fetch = require("node-fetch");
 require("dotenv").config();
 
-const projectId = "37400";
+// const projectId = "37400";
 const companyId = "27788";
 const officeId = "28780";
 const subId = "19721";
 
-const submittalsPackages = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittal_packages`;
+// const submittalsPackages = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittal_packages`;
 
-const listSubmittals = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
+// const listSubmittals = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
 
-const showSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals/${subId}`;
+// const showSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals/${subId}`;
 
 const submittalStatus = `https://sandbox.procore.com/rest/v1.0/companies/${companyId}/submittal_statuses`;
 
-const createSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
+// const createSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
 
-const showProject = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/?company_id=${companyId}`;
+// const showProject = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/?company_id=${companyId}`;
 
 const body = {
   grant_type: "client_credentials",
@@ -29,11 +29,14 @@ router.post("/", (req, res) => {
   if (!req) {
     return "you must provide submittal data";
   }
-  if(!req.body.number){
-    return "you MUST provide a number"
+  if (!req.body.number) {
+    return "you MUST provide a number";
   }
+  const projectId = req.body.projectId;
+  const createSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
+
   const submittalData = {
-    submittal_package_id: req.body.submittalPackageId,
+    submittal_package_id: req.body.submittalPackageId, //custom field?
     title: req.body.name,
     description: req.body.description,
     number: req.body.number,
@@ -42,7 +45,6 @@ router.post("/", (req, res) => {
     type: req.body.trade,
     status_id: req.body.status,
     
-   
   };
   console.log(req.body);
   fetch("https://sandbox.procore.com/oauth/token", {
@@ -52,7 +54,7 @@ router.post("/", (req, res) => {
   })
     .then((res) => res.json())
     .then((tokenData) => {
-      console.log(tokenData);
+      // console.log(tokenData);
       return fetch(
         // companyPath,
         // listProjects,
@@ -78,7 +80,7 @@ router.post("/", (req, res) => {
 
     .then((res) => res.json())
     .then((data) => {
-      console.log("data", data);
+      // console.log("data", data);
       res.json(data);
     })
     .catch((err) => console.log(err));
