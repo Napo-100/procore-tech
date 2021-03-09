@@ -7,6 +7,7 @@ const body = {
 };
 
 const auth = (req, res, next) => {
+// api call to procore to get token data
   fetch("https://sandbox.procore.com/oauth/token", {
     method: "post",
     body: JSON.stringify(body),
