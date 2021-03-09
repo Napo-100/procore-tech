@@ -13,7 +13,7 @@ const subId = "19721";
 
 // const showSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals/${subId}`;
 
-const submittalStatus = `https://sandbox.procore.com/rest/v1.0/companies/${companyId}/submittal_statuses`;
+// const submittalStatus = `https://sandbox.procore.com/rest/v1.0/companies/${companyId}/submittal_statuses`;
 
 // const createSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
 
@@ -30,23 +30,20 @@ router.post("/", (req, res) => {
     return "you must provide submittal data";
   }
   if (!req.body.number) {
+    console.log("no number", req.body);
     return "you MUST provide a number";
   }
   const projectId = req.body.projectId;
   const createSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
 
   const submittalData = {
-    submittal_package_id: req.body.submittalPackageId, //custom field?
     title: req.body.name,
     description: req.body.description,
     number: req.body.number,
     revision: req.body.revisionNumber,
-    current_revision: req.body.isMostRecentRevision,
     type: req.body.trade,
-    status_id: req.body.status,
-    
   };
-  console.log(req.body);
+  console.log(submittalData);
   fetch("https://sandbox.procore.com/oauth/token", {
     method: "post",
     body: JSON.stringify(body),
@@ -55,27 +52,14 @@ router.post("/", (req, res) => {
     .then((res) => res.json())
     .then((tokenData) => {
       // console.log(tokenData);
-      return fetch(
-        // companyPath,
-        // listProjects,
-        // showProject,
-        // submittalStatus,
-        // submittalAttachments,
-        // showSubmittal,
-        // listSubmittals,
-        // submittalsPackages,
-        // submittalPackagesComp,
-        createSubmittal,
-        // deletedSubmittals,
-        {
-          method: "post",
-          body: JSON.stringify(submittalData),
-          headers: {
-            Authorization: tokenData.token_type + " " + tokenData.access_token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      return fetch(createSubmittal, {
+        method: "post",
+        body: JSON.stringify(submittalData),
+        headers: {
+          Authorization: tokenData.token_type + " " + tokenData.access_token,
+          "Content-Type": "application/json",
+        },
+      });
     })
 
     .then((res) => res.json())
