@@ -14,7 +14,6 @@ const auth = (req, res, next) => {
   })
     .then((data) => data.json())
     .then((tokenData) => {
-      console.log(tokenData);
       req.token = tokenData.access_token;
       req.tokenType = tokenData.token_type;
       next();
