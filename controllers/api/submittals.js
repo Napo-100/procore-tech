@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const fetch = require("node-fetch");
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const projectId = req.body.projectId;
   const createSubmittal = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/submittals`;
 
@@ -12,20 +12,21 @@ router.post("/", (req, res) => {
     revision: req.body.revisionNumber,
     type: req.body.trade,
   };
+ try {
 
-  fetch(createSubmittal, {
-    method: "post",
-    body: JSON.stringify(submittalData),
-    headers: {
-      Authorization: req.tokenType + " " + req.token,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      res.json(data);
+   const result = await fetch(createSubmittal, {
+     method: "post",
+     body: JSON.stringify(submittalData),
+     headers: {
+       Authorization: req.tokenType + " " + req.token,
+       "Content-Type": "application/json",
+      },
     })
-    .catch((err) => console.log(err));
+    const data = await result.json()
+    res.json(data)
+  } catch (err) {
+    res.status(500).json(err)
+  }
 });
 
 module.exports = router;
