@@ -6,19 +6,21 @@ const body = {
   client_secret: process.env.CLIENT_SECRET,
 };
 
-const auth = (req, res, next) => {
-// api call to procore to get token data
-  fetch("https://sandbox.procore.com/oauth/token", {
-    method: "post",
-    body: JSON.stringify(body),
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((data) => data.json())
-    .then((tokenData) => {
-      req.token = tokenData.access_token;
-      req.tokenType = tokenData.token_type;
-      next();
-    }).catch((err) => res.json(err));
+const auth = async (req, res, next) => {
+  // api call to procore to get token data
+  try {
+    const tokenData = await fetch("https://sandbox.procore.com/oauth/token", {
+      method: "post",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    });
+    const data = await tokenData.json();
+    req.token = data.access_token;
+    req.tokenType = data.token_type;
+    next();
+  } catch (err) {
+    res.status(500).json(err);
+  }
 };
 
 module.exports = { auth };
